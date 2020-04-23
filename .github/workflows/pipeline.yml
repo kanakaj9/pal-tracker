@@ -56,7 +56,7 @@ jobs:
         name: pal-tracker
 
     - name: chmod permissions
-        run: chmod +x ./gradlew
+      run: chmod +x ./gradlew
     
     - name: Deploy to cf
       run: |
