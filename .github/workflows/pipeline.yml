@@ -13,14 +13,25 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+
+    - name: to start MySQL service automatically.
+      run: |
+        sudo /etc/init.d/mysql start
+
+    - name: chmod permissions
+      run: chmod +x ./gradlew
+
     - name: Create test database
       run: |
         mysql -uroot -proot < databases/tracker/create_databases.sql
         ./gradlew testMigrate
+
     - name: chmod permissions
       run: chmod +x ./gradlew
+
     - name: Build with Gradle
       run: ./gradlew build
+
     - name: Publish artifact
       uses: actions/upload-artifact@v1
       with:
@@ -38,10 +49,12 @@ jobs:
         echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
         sudo apt-get update
         sudo apt-get install cf-cli
+
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
         name: pal-tracker
+
     - name: Deploy to cf
       run: |
         cf login -a "$CF_API_URL" -o "$CF_ORG" -s "$CF_SPACE" -u "$CF_USERNAME" -p "$CF_PASSWORD"
