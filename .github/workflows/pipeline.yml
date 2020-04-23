@@ -55,6 +55,9 @@ jobs:
       with:
         name: pal-tracker
 
+    - name: chmod permissions
+        run: chmod +x ./gradlew
+    
     - name: Deploy to cf
       run: |
         cf login -a "$CF_API_URL" -o "$CF_ORG" -s "$CF_SPACE" -u "$CF_USERNAME" -p "$CF_PASSWORD"
@@ -65,6 +68,9 @@ jobs:
         CF_SPACE: ${{ secrets.CF_SPACE }}
         CF_USERNAME: ${{ secrets.CF_USERNAME }}
         CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+
+    - name: chmod permissions
+      run: chmod +x ./gradlew
 
   migrate-database:
     needs: deploy
@@ -78,6 +84,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install cf-cli
         curl https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/5.2.1/flyway-commandline-5.2.1-linux-x64.tar.gz | tar xvz
+
+    - name: chmod permissions
+      run: chmod +x ./gradlew
+
     - name: Migate tracker-database
       run: |
         cf login -a "$CF_API_URL" -o "$CF_ORG" -s "$CF_SPACE" -u "$CF_USERNAME" -p "$CF_PASSWORD"
